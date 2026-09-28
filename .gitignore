@@ -1,0 +1,60 @@
+# ===== Node =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ===== Build Output =====
+dist/
+build/
+out/
+.wrangler/
+.cache/
+.temp/
+
+# ===== Env & Secret =====
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets.json
+
+# ===== Cloudflare =====
+.dev.vars
+.wrangler/
+wrangler.toml.bak
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Editor =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===== Logs =====
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== Dependencies =====
+vendor/
+Pods/
+*.lock.bak
+
+# ===== User Uploads (kalau ada) =====
+uploads/
+private/
+storage/local/
+
+# ===== Testing =====
+coverage/
+.nyc_output/
