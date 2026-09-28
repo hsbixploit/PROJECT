@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UTARA STAY HIGH</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ===== BACKGROUND ===== */
+.bg {
+  position: fixed;
+  inset: 0;
+  background: url('bg.jpg') center center / cover no-repeat;
+  z-index: -2;
+  filter: brightness(0.35) contrast(1.1) saturate(1.2);
+}
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(0, 140, 255, 0.15), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,20,60,0.5) 50%, rgba(0,0,0,0.85) 100%);
+}
+
+/* Scanlines halus biar keliatan "manusia" */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 200, 255, 0.03) 0px,
+    rgba(0, 200, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 15px 22px;
+  background: rgba(0, 5, 15, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 4px;
+  color: #00ccff;
+  text-shadow:
+    0 0 5px #00ccff,
+    0 0 15px rgba(0, 200, 255, 0.6),
+    0 0 30px rgba(0, 150, 255, 0.4);
+}
+.home-btn {
+  padding: 7px 16px;
+  background: rgba(0, 200, 255, 0.08);
+  border: 1px solid rgba(0, 200, 255, 0.5);
+  color: #00ccff;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.home-btn:hover {
+  background: rgba(0, 200, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+}
+
+/* ===== PAGE ===== */
+.page {
+  display: none;
+  padding: 30px 20px 80px;
+  max-width: 850px;
+  margin: 0 auto;
+  animation: fadeUp 0.35s ease;
+}
+.page.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 40px 15px 30px;
+}
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 10vw, 5rem);
+  letter-spacing: 6px;
+  color: #fff;
+  text-shadow:
+    0 0 6px #00ccff,
+    0 0 18px #0099ff,
+    0 0 40px rgba(0, 150, 255, 0.7),
+    0 0 80px rgba(0, 100, 200, 0.5);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.hero .sub {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+  letter-spacing: 8px;
+  color: #00ccff;
+  text-shadow: 0 0 12px rgba(0, 200, 255, 0.8);
+  margin-bottom: 18px;
+}
+.hero p {
+  color: #8ab8d8;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ===== MENU GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 30px;
+}
+.card {
+  background: rgba(0, 15, 30, 0.7);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+  border-radius: 10px;
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 200, 255, 0.15), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.card:hover::after { opacity: 1; }
+.card:hover {
+  border-color: #00ccff;
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 20px rgba(0, 200, 255, 0.35),
+    inset 0 0 20px rgba(0, 200, 255, 0.08);
+}
+.card:active { transform: scale(0.97); }
+.card .ico {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 8px rgba(0, 200, 255, 0.6));
+}
+.card .n {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #d0ecff;
+  letter-spacing: 0.5px;
+}
+.card .d {
+  font-size: 0.65rem;
+  color: #5a8ba8;
+  margin-top: 4px;
+}
+
+/* ===== BACK BUTTON ===== */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(0, 200, 255, 0.06);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  color: #00ccff;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+.back:active { background: rgba(0, 200, 255, 0.15); }
+
+/* ===== PAGE TITLE ===== */
+.ptitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  letter-spacing: 4px;
+  color: #fff;
+  text-align: center;
+  text-shadow:
+    0 0 8px #00ccff,
+    0 0 24px rgba(0, 150, 255, 0.7);
+  margin-bottom: 6px;
+}
+.psub {
+  text-align: center;
+  color: #6a9cbd;
+  font-size: 0.85rem;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+/* ===== TOOL BOX ===== */
+.box {
+  background: rgba(0, 10, 25, 0.75);
+  border: 1px solid rgba(0, 200, 255, 0.22);
+  border-radius: 12px;
+  padding: 22px 20px;
+  position: relative;
+  box-shadow:
+    0 0 30px rgba(0, 100, 200, 0.15),
+    inset 0 0 30px rgba(0, 100, 200, 0.05);
+}
+.field { margin-bottom: 12px; }
+.field label {
+  display: block;
+  font-size: 0.7rem;
+  color: #7ab4d4;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 200, 255, 0.25);
+  background: rgba(0, 5, 15, 0.7);
+  color: #fff;
+  font-size: 0.92rem;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.field textarea { resize: vertical; min-height: 100px; font-family: monospace; }
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: #00ccff;
+  box-shadow: 0 0 18px rgba(0, 200, 255, 0.3);
+}
+
+.btn {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #00b8f0 0%, #0088cc 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  margin-top: 6px;
+  box-shadow:
+    0 0 20px rgba(0, 180, 240, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s;
+}
+.btn:hover {
+  box-shadow:
+    0 0 30px rgba(0, 200, 255, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 15px rgba(0, 180, 240, 0.5);
+}
+
+.btn-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.btn-row button {
+  padding: 11px;
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  background: rgba(0, 200, 255, 0.08);
+  color: #00ccff;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-row button:hover {
+  background: rgba(0, 200, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.4);
+}
+.btn-row button:active {
+  background: #00ccff;
+  color: #000;
+}
+
+.result {
+  margin-top: 15px;
+  padding: 14px;
+  background: rgba(0, 5, 15, 0.8);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  border-left: 3px solid #00ccff;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #a8d8f0;
+  text-align: center;
+  word-break: break-all;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  letter-spacing: 0.3px;
+}
+.result .big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 3px;
+  color: #00ccff;
+  text-shadow: 0 0 15px rgba(0, 200, 255, 0.6);
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 25px 15px;
+  color: #3d5c75;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  border-top: 1px solid rgba(0, 200, 255, 0.1);
+  margin-top: 40px;
+}
+footer .fbrand {
+  font-family: 'Bebas Neue', sans-serif;
+  color: #00ccff;
+  letter-spacing: 4px;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  text-shadow: 0 0 12px rgba(0, 200, 255, 0.5);
+}
+
+@media (max-width: 500px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .btn-row { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { letter-spacing: 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="scanlines"></div>
+
+<header>
+  <div class="logo">UTARA STAY HIGH</div>
+  <button class="home-btn" onclick="goHome()">HOME</button>
+</header>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <h1>UTARA STAY HIGH</h1>
+    <div class="sub">WEB TOOLS</div>
+    <p>Kumpulan tools sederhana dalam satu tempat. Pilih aja yang lu butuhin.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card" onclick="showPage('shortlink')"><span class="ico">🔗</span><div class="n">Shortlink</div><div class="d">Link pendek</div></div>
+    <div class="card" onclick="showPage('ip')"><span class="ico">🌐</span><div class="n">Cek IP</div><div class="d">IP + lokasi</div></div>
+    <div class="card" onclick="showPage('qr')"><span class="ico">📱</span><div class="n">QR Code</div><div class="d">Bikin QR</div></div>
+    <div class="card" onclick="showPage('base64')"><span class="ico">🔐</span><div class="n">Base64</div><div class="d">Encode/Decode</div></div>
+    <div class="card" onclick="showPage('json')"><span class="ico">📋</span><div class="n">JSON</div><div class="d">Format & minify</div></div>
+    <div class="card" onclick="showPage('pass')"><span class="ico">🔑</span><div class="n">Password</div><div class="d">Generator</div></div>
+    <div class="card" onclick="showPage('kalku')"><span class="ico">🧮</span><div class="n">Kalkulator</div><div class="d">Hitung cepat</div></div>
+    <div class="card" onclick="showPage('bmi')"><span class="ico">⚖️</span><div class="n">BMI</div><div class="d">Berat ideal</div></div>
+    <div class="card" onclick="showPage('suhu')"><span class="ico">🌡️</span><div class="n">Suhu</div><div class="d">C / F / K</div></div>
+    <div class="card" onclick="showPage('warna')"><span class="ico">🎨</span><div class="n">Warna</div><div class="d">Random hex</div></div>
+    <div class="card" onclick="showPage('umur')"><span class="ico">🎂</span><div class="n">Umur</div><div class="d">Dari tgl lahir</div></div>
+    <div class="card" onclick="showPage('about')"><span class="ico">ℹ️</span><div class="n">Tentang</div><div class="d">Info web</div></div>
+  </div>
+</div>
+
+<!-- SHORTLINK -->
+<div class="page" id="page-shortlink">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">SHORTLINK</h2>
+  <p class="psub">Bikin link pendek dari URL panjang</p>
+  <div class="box">
+    <div class="field"><label>URL Panjang</label><input type="text" id="sl_url" placeholder="https://example.com/link-panjang" /></div>
+    <div class="field"><label>Nama Pendek</label><input type="text" id="sl_name" placeholder="promo" /></div>
+    <button class="btn" onclick="bikinShortlink()">BUAT SHORTLINK</button>
+    <div class="result" id="sl_res">-</div>
+  </div>
+</div>
+
+<!-- IP -->
+<div class="page" id="page-ip">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">CEK IP</h2>
+  <p class="psub">Lihat IP publik + lokasi lu</p>
+  <div class="box">
+    <button class="btn" onclick="cekIP()">CEK IP SEKARANG</button>
+    <div class="result" id="ip_res">-</div>
+  </div>
+</div>
+
+<!-- QR -->
+<div class="page" id="page-qr">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">QR CODE</h2>
+  <p class="psub">Bikin QR code dari teks / link</p>
+  <div class="box">
+    <div class="field"><label>Teks / Link</label><input type="text" id="qr_text" placeholder="https://example.com" /></div>
+    <button class="btn" onclick="genQR()">BIKIN QR</button>
+    <div class="result" id="qr_res">-</div>
+  </div>
+</div>
+
+<!-- BASE64 -->
+<div class="page" id="page-base64">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">BASE64</h2>
+  <p class="psub">Encode / Decode teks</p>
+  <div class="box">
+    <div class="field"><label>Teks</label><textarea id="b64_text" placeholder="Ketik teks..."></textarea></div>
+    <button class="btn" onclick="b64encode()">ENCODE</button>
+    <button class="btn" onclick="b64decode()">DECODE</button>
+    <div class="result" id="b64_res">-</div>
+  </div>
+</div>
+
+<!-- JSON -->
+<div class="page" id="page-json">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">JSON FORMATTER</h2>
+  <p class="psub">Rapihin atau minify JSON</p>
+  <div class="box">
+    <div class="field"><label>JSON</label><textarea id="json_text" placeholder='{"nama":"utara","stay":"high"}'></textarea></div>
+    <button class="btn" onclick="jsonFormat()">FORMAT</button>
+    <button class="btn" onclick="jsonMinify()">MINIFY</button>
+    <div class="result" id="json_res">-</div>
+  </div>
+</div>
+
+<!-- PASSWORD -->
+<div class="page" id="page-pass">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">GENERATOR PASSWORD</h2>
+  <p class="psub">Bikin password kuat & aman</p>
+  <div class="box">
+    <div class="field"><label>Panjang</label><input type="number" id="pw_len" value="16" min="4" max="64" /></div>
+    <div class="field">
+      <label>Tipe</label>
+      <select id="pw_type">
+        <option value="all">Huruf + Angka + Simbol</option>
+        <option value="alnum">Huruf + Angka</option>
+        <option value="num">Angka Aja</option>
+        <option value="alpha">Huruf Aja</option>
+      </select>
+    </div>
+    <button class="btn" onclick="genPass()">GENERATE</button>
+    <div class="result" id="pw_res">-</div>
+  </div>
+</div>
+
+<!-- KALKULATOR -->
+<div class="page" id="page-kalku">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">KALKULATOR</h2>
+  <p class="psub">Hitung angka dengan cepat</p>
+  <div class="box">
+    <div class="field"><label>Angka 1</label><input type="number" id="k_a" placeholder="0" /></div>
+    <div class="field"><label>Angka 2</label><input type="number" id="k_b" placeholder="0" /></div>
+    <div class="btn-row">
+      <button onclick="kali('+')">+</button>
+      <button onclick="kali('-')">−</button>
+      <button onclick="kali('*')">×</button>
+      <button onclick="kali('/')">÷</button>
+    </div>
+    <div class="result" id="k_res">-</div>
+  </div>
+</div>
+
+<!-- BMI -->
+<div class="page" id="page-bmi">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">KALKULATOR BMI</h2>
+  <p class="psub">Cek apakah berat badan ideal</p>
+  <div class="box">
+    <div class="field"><label>Berat (kg)</label><input type="number" id="bmi_w" /></div>
+    <div class="field"><label>Tinggi (cm)</label><input type="number" id="bmi_h" /></div>
+    <button class="btn" onclick="hitungBMI()">HITUNG</button>
+    <div class="result" id="bmi_res">-</div>
+  </div>
+</div>
+
+<!-- SUHU -->
+<div class="page" id="page-suhu">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">KONVERTER SUHU</h2>
+  <p class="psub">Celsius ↔ Fahrenheit ↔ Kelvin</p>
+  <div class="box">
+    <div class="field"><label>Nilai</label><input type="number" id="s_val" /></div>
+    <div class="field">
+      <label>Dari</label>
+      <select id="s_from">
+        <option value="c">Celsius</option>
+        <option value="f">Fahrenheit</option>
+        <option value="k">Kelvin</option>
+      </select>
+    </div>
+    <button class="btn" onclick="konversiSuhu()">KONVERSI</button>
+    <div class="result" id="s_res">-</div>
+  </div>
+</div>
+
+<!-- WARNA -->
+<div class="page" id="page-warna">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">GENERATOR WARNA</h2>
+  <p class="psub">Random warna hex</p>
+  <div class="box">
+    <button class="btn" onclick="genWarna()">RANDOM WARNA</button>
+    <div class="result" id="w_res"><span class="big" id="w_hex">#FFFFFF</span></div>
+  </div>
+</div>
+
+<!-- UMUR -->
+<div class="page" id="page-umur">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">HITUNG UMUR</h2>
+  <p class="psub">Masukin tanggal lahir lu</p>
+  <div class="box">
+    <div class="field"><label>Tanggal Lahir</label><input type="date" id="u_date" /></div>
+    <button class="btn" onclick="hitungUmur()">HITUNG UMUR</button>
+    <div class="result" id="u_res">-</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <button class="back" onclick="goHome()">← KEMBALI</button>
+  <h2 class="ptitle">TENTANG</h2>
+  <div class="box" style="text-align: center;">
+    <p style="line-height: 2; color: #8ab8d8;">
+      <b style="color: #00ccff; letter-spacing: 3px;">UTARA STAY HIGH</b><br><br>
+      Kumpulan tools sederhana buat kebutuhan harian.<br>
+      Dibuat dengan tangan, bukan template.<br><br>
+      <span style="color: #3d5c75; font-size: 0.8rem;">© 2026 UTARA</span>
+    </p>
+  </div>
+</div>
+
+<footer>
+  <div class="fbrand">UTARA STAY HIGH</div>
+  <p>© 2026 - STAY HIGH</p>
+</footer>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const p = document.getElementById('page-' + id);
+  if (p) { p.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+}
+function goHome() { showPage('home'); }
+
+function bikinShortlink() {
+  const url = document.getElementById('sl_url').value.trim();
+  const name = document.getElementById('sl_name').value.trim();
+  const res = document.getElementById('sl_res');
+  if (!url) { res.innerText = 'Isi URL dulu!'; return; }
+  const kode = name || Math.random().toString(36).substring(2, 8);
+  const host = window.location.origin;
+  res.innerHTML = `Link pendek lu:<br><span class="big">${host}/${kode}</span>`;
+}
+
+async function cekIP() {
+  const res = document.getElementById('ip_res');
+  res.innerText = 'Loading...';
+  try {
+    const r = await fetch('/api/ip');
+    const d = await r.json();
+    res.innerHTML = `IP: <b>${d.ip || '-'}</b><br>Negara: <b>${d.country || '-'}</b><br>Kota: <b>${d.city || '-'}</b>`;
+  } catch (e) {
+    try {
+      const r2 = await fetch('https://ipapi.co/json/');
+      const d2 = await r2.json();
+      res.innerHTML = `IP: <b>${d2.ip}</b><br>Negara: <b>${d2.country_name}</b><br>Kota: <b>${d2.city}</b>`;
+    } catch (e2) {
+      res.innerText = 'Gagal cek IP: ' + e.message;
+    }
+  }
+}
+
+function genQR() {
+  const t = document.getElementById('qr_text').value.trim();
+  const res = document.getElementById('qr_res');
+  if (!t) { res.innerText = 'Isi teks/link dulu!'; return; }
+  const url = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(t);
+  res.innerHTML = `<img src="${url}" style="border-radius:8px; max-width:250px; border:2px solid #00ccff;" />`;
+}
+
+function b64encode() {
+  const t = document.getElementById('b64_text').value;
+  document.getElementById('b64_res').innerText = btoa(unescape(encodeURIComponent(t)));
+}
+function b64decode() {
+  const t = document.getElementById('b64_text').value;
+  try { document.getElementById('b64_res').innerText = decodeURIComponent(escape(atob(t))); }
+  catch (e) { document.getElementById('b64_res').innerText = 'Bukan Base64 valid'; }
+}
+
+function jsonFormat() {
+  try {
+    const o = JSON.parse(document.getElementById('json_text').value);
+    document.getElementById('json_res').innerHTML = '<pre style="text-align:left; font-size:0.78rem; overflow:auto; max-height:200px; width:100%;">' + JSON.stringify(o, null, 2) + '</pre>';
+  } catch (e) { document.getElementById('json_res').innerText = 'JSON invalid'; }
+}
+function jsonMinify() {
+  try {
+    const o = JSON.parse(document.getElementById('json_text').value);
+    document.getElementById('json_res').innerText = JSON.stringify(o);
+  } catch (e) { document.getElementById('json_res').innerText = '
